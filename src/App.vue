@@ -136,7 +136,8 @@ export default {
       DataStore.save(
         new Chatty({
           user: this.user.username,
-          message: message
+          message: message,
+          createdAt: new Date().toISOString()
         })
       ).then(() => {
         console.log('message created!');
