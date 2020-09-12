@@ -10,48 +10,48 @@
       <h1>Welcome to the Amplify Framework</h1>
     </div>
     <div class="app-body">
-      <amplify-authenticator :key="key"></amplify-authenticator>
-      <div v-if="user.username">
-        <h1>Hey, {{user.username}}!</h1>
-        <amplify-sign-out></amplify-sign-out>
-      </div>
-      <div class="form-body" v-if="user.username">
-        <form v-on:submit.prevent autocomplete="off">
-          <div class="input">
-            <input class="message-input" v-model="form.message" autocomplete="off" placeholder="Enter your message..." />
-          </div>
-          <button @click="sendMessage">Send</button>
-          <button @click="deleteAll">Delete All</button>
-        </form>
-      </div>
-      <div v-if="user.username">
-        <div v-if="loading" class="loading">Loading...</div>
-        <div class="chatty-container" v-if="!loading">
-          <div class="chatty">
-            <div v-for="message of sorted" :key="message.id">
-              <div v-bind:class="[(user.username === message.user) ?'me' : 'others']">
-                <div class="message-container">
-                  <div class="message-user">
-                    {{ message.user }}
-                    <span
-                      class="message-time"
-                      :title="moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')"
-                    >{{ moment(message.createdAt).format('HH:mm:ss')}}</span>
+      <amplify-authenticator>
+        <div class="welcome">
+          <h1>Hey, {{user.username}}!</h1>
+          <amplify-sign-out></amplify-sign-out>
+        </div>
+        <div class="form-body" v-if="user.username">
+          <form v-on:submit.prevent autocomplete="off">
+            <div class="input">
+              <input class="message-input" v-model="form.message" autocomplete="off" placeholder="Enter your message..." />
+            </div>
+            <button @click="sendMessage">Send</button>
+            <button @click="deleteAll">Delete All</button>
+          </form>
+        </div>
+        <div v-if="user.username">
+          <div v-if="loading" class="loading">Loading...</div>
+          <div class="chatty-container" v-if="!loading">
+            <div class="chatty">
+              <div v-for="message of sorted" :key="message.id">
+                <div v-bind:class="[(user.username === message.user) ?'me' : 'others']">
+                  <div class="message-container">
+                    <div class="message-user">
+                      {{ message.user }}
+                      <span
+                        class="message-time"
+                        :title="moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')"
+                      >{{ moment(message.createdAt).format('HH:mm:ss')}}</span>
+                    </div>
+                    <div class="message-text">{{ message.message }}</div>
                   </div>
-                  <div class="message-text">{{ message.message }}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </amplify-authenticator>
     </div>
   </div>
 </template>
 
 <script>
-import { Auth } from "aws-amplify";
-import { AmplifyEventBus } from "aws-amplify-vue";
+import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { DataStore, Predicates } from "@aws-amplify/datastore";
 import { Chatty } from "./models";
 import moment from "moment";
@@ -61,7 +61,6 @@ export default {
   data() {
     return {
       user: {},
-      key: 0,
       messages: [],
       form: {},
       loading: true,
@@ -75,27 +74,24 @@ export default {
     }
   },
   created() {
-    // user already signed-in
-    this.currentUser();
-
     //Subscribe to changes
     this.subscription = DataStore.observe(Chatty).subscribe(msg => {
       console.log(msg.model, msg.opType, msg.element);
       this.loadMessages();
     });
 
-    AmplifyEventBus.$on("authState", event => {
-      switch (event) {
-        case "signedIn": {
+      // authentication state managament
+    onAuthUIStateChange((state, user) => {
+      switch (state) {
+        case AuthState.SignedIn: {
           //console.log("User signed in");
-          this.currentUser();
+          this.user = user;
           this.loadMessages();
           return;
         }
-        case "signedOut": {
+        case AuthState.SignedOut: {
           //console.log("User signed out");
           this.user = {};
-          this.key = 1;
           return;
         }
         default: {
@@ -110,13 +106,6 @@ export default {
   },
   methods: {
     moment: () => moment(),
-    currentUser() {
-      Auth.currentAuthenticatedUser().then(user => {
-        this.user = user;
-        this.loadMessages();
-        this.key = 1;
-      });
-    },
     loadMessages() {
       try {
         this.loading = true;
@@ -531,5 +520,15 @@ input {
   border-radius: 3px;
   box-sizing: border-box;
   margin: 10px;
+}
+
+.welcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+.welcome h1 {
+  margin-right: 40px;
 }
 </style>

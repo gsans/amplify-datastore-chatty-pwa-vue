@@ -14,6 +14,7 @@ export const createChatty = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      updatedAt
     }
   }
 `;
@@ -30,6 +31,7 @@ export const updateChatty = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      updatedAt
     }
   }
 `;
@@ -46,6 +48,7 @@ export const deleteChatty = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      updatedAt
     }
   }
 `;

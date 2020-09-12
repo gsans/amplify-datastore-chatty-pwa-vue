@@ -22,6 +22,7 @@ export const syncChatties = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        updatedAt
       }
       nextToken
       startedAt
@@ -38,6 +39,7 @@ export const getChatty = /* GraphQL */ `
       _version
       _deleted
       _lastChangedAt
+      updatedAt
     }
   }
 `;
@@ -56,6 +58,7 @@ export const listChattys = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        updatedAt
       }
       nextToken
       startedAt

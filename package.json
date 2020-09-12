@@ -10,8 +10,8 @@
   "dependencies": {
     "@aws-amplify/core": "^3.2.4",
     "@aws-amplify/datastore": "^2.0.8",
+    "@aws-amplify/ui-vue": "^0.2.18",
     "aws-amplify": "^3.0.8",
-    "aws-amplify-vue": "^2.1.1",
     "core-js": "^3.6.4",
     "moment": "^2.24.0",
     "vue": "^2.6.11"
