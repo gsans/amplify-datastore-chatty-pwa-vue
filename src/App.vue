@@ -558,4 +558,10 @@ input {
   font-size: 1em;
   font-style: italic;
 }
+
+  @media screen and (max-width: 640px) {
+    .app-body {
+      width: 95%;
+    }
+  }
 </style>
