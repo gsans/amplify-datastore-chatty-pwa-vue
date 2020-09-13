@@ -57,6 +57,7 @@ import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import { DataStore, Predicates } from "@aws-amplify/datastore";
 import { Chatty } from "./models";
 import moment from "moment";
+import { Hub } from 'aws-amplify';
 
 export default {
   name: "app",
@@ -75,7 +76,17 @@ export default {
       return messages.sort((a, b) => -a.createdAt.localeCompare(b.createdAt));
     }
   },
-  created() {
+  async created() {
+    //listen to datastore
+    console.log('Registering datastore hub');
+    Hub.listen("datastore", async (capsule) => {
+      const {
+        payload: { event, data },
+      } = capsule;
+ 
+      console.log("DataStore event", event, data);
+    });
+
     //Subscribe to changes
     this.subscription = DataStore.observe(Chatty).subscribe(msg => {
       console.log(msg.model, msg.opType, msg.element);
