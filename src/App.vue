@@ -15,6 +15,8 @@
           <h1>Hey, {{user.username}}!</h1>
           <amplify-sign-out></amplify-sign-out>
         </div>
+      </amplify-authenticator>
+      <div v-if="user">
         <div class="form-body" v-if="user.username">
           <form v-on:submit.prevent autocomplete="off">
             <div class="input">
@@ -45,7 +47,7 @@
             </div>
           </div>
         </div>
-      </amplify-authenticator>
+      </div>
     </div>
   </div>
 </template>
