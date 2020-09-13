@@ -4,6 +4,7 @@ import App from './App.vue'
 import Amplify from 'aws-amplify'
 import '@aws-amplify/ui-vue';
 import awsconfig from './aws-exports'
+import './registerServiceWorker'
 Amplify.configure(awsconfig)
 
 Vue.config.productionTip = false
