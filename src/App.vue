@@ -19,7 +19,7 @@
       <div v-if="user">
         <div class="form-body" v-if="user.username">
           <form v-on:submit.prevent autocomplete="off">
-            <div class="input">
+            <div class="input" v-bind:class="{ offline: offline }">
               <input class="message-input" v-model="form.message" autocomplete="off" placeholder="Enter your message..." />
             </div>
             <button @click="sendMessage">Send</button>
@@ -28,7 +28,8 @@
         </div>
         <div v-if="user.username">
           <div v-if="loading" class="loading">Loading...</div>
-          <div class="chatty-container" v-if="!loading">
+          <div class="chatty-container" v-if="!loading" v-bind:class="{ offline: offline }">
+            <div class="offline-msg" v-if="offline">You are offline. Your messages will be shared once you are connected.</div>
             <div class="chatty">
               <div v-for="message of sorted" :key="message.id">
                 <div v-bind:class="[(user.username === message.user) ?'me' : 'others']">
@@ -68,6 +69,8 @@ export default {
       form: {},
       loading: true,
       subscription: undefined,
+      listener: undefined,
+      offline: undefined
     };
   },
   computed: {
@@ -76,16 +79,16 @@ export default {
       return messages.sort((a, b) => -a.createdAt.localeCompare(b.createdAt));
     }
   },
-  async created() {
+  created() {
     //listen to datastore
     console.log('Registering datastore hub');
-    Hub.listen("datastore", async (capsule) => {
-      const {
-        payload: { event, data },
-      } = capsule;
- 
+    this.listener = Hub.listen('datastore', message => {
+      const { event, data } = message.payload;
       console.log("DataStore event", event, data);
-    });
+      if (event === 'networkStatus') {
+        this.offline = !data.active;
+      }
+    })
 
     //Subscribe to changes
     this.subscription = DataStore.observe(Chatty).subscribe(msg => {
@@ -116,6 +119,7 @@ export default {
   destroyed() {
     if (!this.subscription) return;
     this.subscription.unsubscribe();
+    this.listener();
   },
   methods: {
     moment: () => moment(),
@@ -543,5 +547,15 @@ input {
 }
 .welcome h1 {
   margin-right: 40px;
+}
+.offline, .input.offline {
+  background: #F06292;
+}
+.offline-msg {
+  position: relative;
+  top: 10px;
+  font-weight: 600;
+  font-size: 1em;
+  font-style: italic;
 }
 </style>
