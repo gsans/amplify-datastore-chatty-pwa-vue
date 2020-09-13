@@ -553,15 +553,16 @@ input {
 }
 .offline-msg {
   position: relative;
-  top: 10px;
+  height: 60px;
+  padding-top: 10px;
   font-weight: 600;
   font-size: 1em;
   font-style: italic;
 }
 
-  @media screen and (max-width: 640px) {
-    .app-body {
-      width: 95%;
-    }
+@media screen and (max-width: 640px) {
+  .app-body {
+    width: 95%;
   }
+}
 </style>
