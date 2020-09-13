@@ -564,5 +564,22 @@ input {
   .app-body {
     width: 95%;
   }
+  .welcome {
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  .app-body button {
+    min-width: unset;
+  }
+  .app-header h1 {
+    display: none;
+  }
+  .app-header {
+    margin: unset;
+    padding: 20px 0px 20px 0px;
+  }
+  .app-header img {
+    width: 100px;
+  }
 }
 </style>
