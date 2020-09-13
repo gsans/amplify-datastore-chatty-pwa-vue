@@ -1,5 +1,9 @@
 /* eslint-disable no-console */
 
+// import { precacheAndRoute } from 'workbox-precaching';
+// // eslint-disable-next-line no-restricted-globals, no-underscore-dangle
+// precacheAndRoute(self.__WB_MANIFEST);
+
 import { register } from 'register-service-worker'
 
 if (process.env.NODE_ENV === 'production') {
