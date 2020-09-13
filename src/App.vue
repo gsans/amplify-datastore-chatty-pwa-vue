@@ -38,8 +38,8 @@
                       {{ message.user }}
                       <span
                         class="message-time"
-                        :title="moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')"
-                      >{{ moment(message.createdAt).format('HH:mm:ss')}}</span>
+                        :title="$options.filters.formatDateTime(message.createdAt)"
+                      >{{message.createdAt | formatTime}}</span>
                     </div>
                     <div class="message-text">{{ message.message }}</div>
                   </div>
@@ -59,6 +59,18 @@ import { DataStore, Predicates } from "@aws-amplify/datastore";
 import { Chatty } from "./models";
 import moment from "moment";
 import { Hub } from 'aws-amplify';
+import Vue from 'vue'
+
+Vue.filter('formatTime', function(value) {
+  if (value) {
+    return moment(String(value)).format('HH:mm:ss')
+  }
+})
+Vue.filter('formatDateTime', function(value) {
+  if (value) {
+    return moment(String(value)).format('YYYY-MM-DD HH:mm:ss')
+  }
+})
 
 export default {
   name: "app",
