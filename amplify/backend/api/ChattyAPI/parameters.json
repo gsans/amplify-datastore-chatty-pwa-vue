@@ -1,5 +1,11 @@
 {
     "AppSyncApiName": "ChattyAPI",
     "DynamoDBBillingMode": "PAY_PER_REQUEST",
-    "DynamoDBEnableServerSideEncryption": "false"
+    "DynamoDBEnableServerSideEncryption": "false",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authamplifydatastored5016fb7",
+            "Outputs.UserPoolId"
+        ]
+    }
 }
